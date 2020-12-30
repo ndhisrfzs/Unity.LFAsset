@@ -1,0 +1,11 @@
+{
+  "name": "com.unity.lfasset",
+  "version": "0.0.1",
+  "unity": "2019.3",
+  "displayName": "LFAsset",
+  "keywords": [
+    "lfasset"
+  ],
+  "repository": {},
+  "description": "Unity LFAsset"
+}

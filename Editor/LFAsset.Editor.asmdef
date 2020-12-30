@@ -1,0 +1,18 @@
+{
+    "name": "LFAsset.Editor",
+    "references": [
+        "GUID:55aee7c771e0a094cb2bb7a9adaeffb1",
+        "GUID:6676589d53b3860468605debb815c5f3"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
