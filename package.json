@@ -3,6 +3,9 @@
   "version": "0.0.1",
   "unity": "2019.3",
   "displayName": "LFAsset",
+  "dependencies": {
+	"com.unity.newtonsoft.json": "0.0.1"
+  },
   "keywords": [
     "lfasset"
   ],
