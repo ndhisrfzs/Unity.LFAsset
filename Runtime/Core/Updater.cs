@@ -52,7 +52,7 @@ namespace LFAsset.Runtime
 
         private Step _step;
 
-        [SerializeField] private string baseUrl = "http://127.0.0.1:8088/";
+        private string baseUrl = "http://127.0.0.1:8088/";
 
         public IUpdaterEvent eventListener { get;set; }
         public IUpdater listener { get; set; }
@@ -62,6 +62,15 @@ namespace LFAsset.Runtime
         private string _platform;
         private string _savePath;
         private AssetsVersion _version;
+
+        /// <summary>
+        /// 初始化url地址
+        /// </summary>
+        /// <param name="url"></param>
+        public void InitUrl(string url)
+        {
+            this.baseUrl = url;
+        }
             
         private bool _reachabilityChanged;
         public void OnReachablityChanged(NetworkReachability reachability)
