@@ -24,6 +24,11 @@ namespace LFAsset.Runtime
             if (asset == null)
                 return;
 
+#if UNITY_EDITOR
+            if (!(asset is GameObject))
+                Resources.UnloadAsset(asset);
+#endif
+
             asset = null;
         }
     }
@@ -49,11 +54,11 @@ namespace LFAsset.Runtime
             }
         }
 
-        public ManifestConfig Manifest 
+        public Manifest Manifest 
         {
             get
             {
-                return bundle.assetBundle.LoadAsset<ManifestConfig>(assetName);
+                return bundle.assetBundle.LoadAsset<Manifest>(assetName);
             }
         }
     }
@@ -71,10 +76,12 @@ namespace LFAsset.Runtime
 
         internal override void Load()
         {
-            var bundles = AssetBundleManager.Ins.GetAllDependencies(name);
-            foreach (var item in bundles)
+            if (AssetBundleManager.Ins.GetAllDependencies(assetBundleName, out var bundles))
             {
-                children.Add(AssetBundleManager.Ins.LoadBundle(item));
+                foreach (var item in bundles)
+                {
+                    children.Add(AssetBundleManager.Ins.LoadBundle(item));
+                }
             }
             bundleLoader = AssetBundleManager.Ins.LoadBundle(assetBundleName);
             var assetName = Path.GetFileName(name);

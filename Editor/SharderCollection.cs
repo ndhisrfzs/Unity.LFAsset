@@ -5,8 +5,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 using UnityEditor;
 
@@ -113,7 +111,7 @@ namespace LFAsset.Editor
             string path = AssetDatabase.GetAssetPath(mat.shader);
             if(!allSharderNames.Contains(path))
             {
-                Debug.LogError($"Shader:{mat.shader.name} Path:{path} 不存在");
+                Debug.LogError($"Mat Path: {AssetDatabase.GetAssetPath(mat)} Shader:{mat.shader.name} Path:{path} 不存在");
                 return;
             }
 

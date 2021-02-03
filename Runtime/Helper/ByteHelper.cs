@@ -11,12 +11,7 @@ namespace LFAsset.Runtime
 
 		public static string ToHex(this byte[] bytes)
 		{
-			StringBuilder stringBuilder = new StringBuilder();
-			foreach (byte b in bytes)
-			{
-				stringBuilder.Append(b.ToString("X2"));
-			}
-			return stringBuilder.ToString();
+			return bytes.ToHex("X2");
 		}
 
 		public static string ToHex(this byte[] bytes, string format)
@@ -30,11 +25,16 @@ namespace LFAsset.Runtime
 		}
 
 		public static string ToHex(this byte[] bytes, int offset, int count)
+        {
+			return bytes.ToHex("X2", offset, count);
+        }
+
+		public static string ToHex(this byte[] bytes, string format, int offset, int count)
 		{
 			StringBuilder stringBuilder = new StringBuilder();
 			for (int i = offset; i < offset + count; ++i)
 			{
-				stringBuilder.Append(bytes[i].ToString("X2"));
+				stringBuilder.Append(bytes[i].ToString(format));
 			}
 			return stringBuilder.ToString();
 		}

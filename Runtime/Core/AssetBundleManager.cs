@@ -11,15 +11,14 @@ namespace LFAsset.Runtime
     [MonoSingletonPath("Managers/AssetBundleManager")]
     public class AssetBundleManager : MonoSingleton<AssetBundleManager>, IResourceManager
     {
-        private const string ManifestAsset = "Manifest.asset";
+        public const string ManifestAsset = "Manifest.asset";
+        public static bool BundleIsEncrypt = false;
+        public static string BundleSecret = string.Empty; 
 
         // 资源基础目录
         private static string basePath;
         // 资源更新目录
         private static string updatePath;
-
-        // 依赖配置文件
-        private ManifestConfig Manifest;
 
         // 当前加载的资源和AB包
         private Dictionary<string, AssetLoader> _assets = new Dictionary<string, AssetLoader>();
@@ -29,22 +28,31 @@ namespace LFAsset.Runtime
         private List<AssetLoader> _unusedAssets = new List<AssetLoader>();
         private List<BundleLoader> _unusedBundles = new List<BundleLoader>();
 
+        private readonly Dictionary<string, string> _assetToBundles = new Dictionary<string, string>();
+        private readonly Dictionary<string, string[]> _bundleToDependencies = new Dictionary<string, string[]>();
+
         /// <summary>
         /// 初始化AB管理器
         /// </summary>
-        public void Init()
+        public void Init(bool isEncrypt, string secret)
         {
-            if(string.IsNullOrEmpty(basePath))
+            BundleIsEncrypt = isEncrypt;
+            BundleSecret = secret;
+
+            if (string.IsNullOrEmpty(basePath))
             {
                 basePath = PathHelper.AppResPath;
             }
 
-            if(string.IsNullOrEmpty(updatePath))
+            if (string.IsNullOrEmpty(updatePath))
             {
                 updatePath = PathHelper.AppHotfixResPath;
             }
 
-            LoadManifest();
+            if (BundleIsEncrypt)
+            { 
+                AssetBundle.SetAssetBundleDecryptKey(MD5Helper.Encrypt16(BundleSecret));
+            }
         }
 
         /// <summary>
@@ -55,8 +63,40 @@ namespace LFAsset.Runtime
             ManifestLoader loader = new ManifestLoader() { name = ManifestAsset };
             AddAssetLoader(loader);
             loader.Retain();
-            Manifest = loader.Manifest;
+            ProcessManifest(loader.Manifest);
             loader.Release();
+        }
+
+        /// <summary>
+        /// Manifest处理
+        /// </summary>
+        /// <param name="manifest"></param>
+        internal void ProcessManifest(Manifest manifest)
+        {
+            _assetToBundles.Clear();
+            _bundleToDependencies.Clear();
+
+            var assets = manifest.assets;
+            var dirs = manifest.dirs;
+            var bundles = manifest.bundles;
+
+            foreach (var item in bundles)
+            {
+                _bundleToDependencies[item.name] = Array.ConvertAll(item.deps, id => bundles[id].name);
+            }
+
+            foreach (var item in assets)
+            {
+                var path = $"{dirs[item.dir]}/{item.name}";
+                if(item.bundle >= 0 && item.bundle < bundles.Length)
+                {
+                    _assetToBundles[path.ToLower()] = bundles[item.bundle].name;
+                }
+                else
+                {
+                    Debug.LogError($"{path} bundle {item.bundle} not exist.");
+                }
+            }
         }
 
         /// <summary>
@@ -67,14 +107,7 @@ namespace LFAsset.Runtime
         /// <returns>是否获取到</returns>
         internal bool GetAssetBundleName(string path, out string assetBundleName)
         {
-            assetBundleName = string.Empty;
-            var assetBundle = Manifest.GetManifest(path);
-            if(assetBundle != null)
-            {
-                assetBundleName = assetBundle.Path;
-                return true;
-            }
-            return false;
+            return _assetToBundles.TryGetValue(path, out assetBundleName);
         }
 
         /// <summary>
@@ -180,11 +213,12 @@ namespace LFAsset.Runtime
         /// </summary>
         public void UnloadAllAsset()
         {
-            Manifest = null;
             _unusedAssets.Clear();
             _unusedBundles.Clear();
             _assets.Clear();
             _bundles.Clear();
+            _assetToBundles.Clear();
+            _bundleToDependencies.Clear();
             AssetBundle.UnloadAllAssetBundles(true);
         }
 
@@ -213,7 +247,7 @@ namespace LFAsset.Runtime
             foreach (var item in _unusedBundles)
             {
                 item.Unload();
-                _bundles.Remove(item.name);
+                _bundles.Remove(item.assetBundleName);
             }
             _unusedBundles.Clear();
         }
@@ -244,9 +278,9 @@ namespace LFAsset.Runtime
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        internal List<string> GetAllDependencies(string name)
+        internal bool GetAllDependencies(string name, out string[] deps)
         {
-            return Manifest.GetDependencies(name);
+            return _bundleToDependencies.TryGetValue(name, out deps);
         }
 
         /// <summary>

@@ -15,7 +15,7 @@ namespace LFAsset.Runtime
             {
                 if(Application.isMobilePlatform)
                 {
-                    return Path.Combine(Application.persistentDataPath, Application.productName);
+                    return Application.persistentDataPath + "/DLC/";
                 }
                 else
                 {
@@ -31,7 +31,7 @@ namespace LFAsset.Runtime
         {
             get
             {
-                return Application.streamingAssetsPath;
+                return Application.streamingAssetsPath + "/";
             }
         }
 
@@ -42,11 +42,18 @@ namespace LFAsset.Runtime
         {
             get
             {
-#if UNITY_IOS || UNITY_STANDALONE_OSX
-                return $"file://{Application.streamingAssetsPath}";
-#else
-                return Application.streamingAssetsPath;
-#endif
+                if (Application.platform == RuntimePlatform.Android)
+                {
+                    return Application.streamingAssetsPath + "/";
+                }
+
+                if (Application.platform == RuntimePlatform.WindowsPlayer ||
+                    Application.platform == RuntimePlatform.WindowsEditor)
+                {
+                    return "file:///" + Application.streamingAssetsPath + "/";
+                }
+
+                return "file://" + Application.streamingAssetsPath + "/";
             }
         }
     }

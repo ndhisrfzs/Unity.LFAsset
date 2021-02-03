@@ -11,8 +11,8 @@ namespace System.IO
         /// 检测路径是否存在
         /// </summary>
         /// <param name="path"></param>
-        static  private void CheckDirectory(string path)
-        { 
+        private static void CheckDirectory(string path)
+        {
             var direct = Path.GetDirectoryName(path);
             if (!Directory.Exists(direct))
             {
@@ -26,7 +26,7 @@ namespace System.IO
         /// </summary>
         /// <param name="path"></param>
         /// <param name="bytes"></param>
-       static public void WriteAllBytes(string path,byte[] bytes)
+        public static void WriteAllBytes(string path, byte[] bytes)
         {
             CheckDirectory(path);
             File.WriteAllBytes(path,bytes);
@@ -37,7 +37,7 @@ namespace System.IO
         /// </summary>
         /// <param name="path"></param>
         /// <param name="contents"></param>
-        static public void WriteAllText(string path, string contents)
+        public static void WriteAllText(string path, string contents)
         {
             CheckDirectory(path);
             File.WriteAllText(path,contents);
@@ -48,7 +48,7 @@ namespace System.IO
         /// </summary>
         /// <param name="path"></param>
         /// <param name="contents"></param>
-        static public void WriteAllLines(string path, string[] contents)
+        public static void WriteAllLines(string path, string[] contents)
         {
             CheckDirectory(path);
             File.WriteAllLines(path,contents);
@@ -99,16 +99,27 @@ namespace System.IO
 		
 		public static void CleanDirectory(string dir)
 		{
-			foreach (string subdir in Directory.GetDirectories(dir))
-			{
-				Directory.Delete(subdir, true);		
-			}
+            if (Directory.Exists(dir))
+            {
+                foreach (string subdir in Directory.GetDirectories(dir))
+                {
+                    Directory.Delete(subdir, true);
+                }
 
-			foreach (string subFile in Directory.GetFiles(dir))
-			{
-				File.Delete(subFile);
-			}
+                foreach (string subFile in Directory.GetFiles(dir))
+                {
+                    File.Delete(subFile);
+                }
+            }
 		}
+
+        public static void RemoveFile(string file)
+        {
+            if(File.Exists(file))
+            {
+                File.Delete(file);
+            }
+        }
 
 		public static void CopyDirectory(string srcDir, string tgtDir)
 		{
@@ -144,5 +155,11 @@ namespace System.IO
 				CopyDirectory(dirs[j].FullName, Path.Combine(target.FullName, dirs[j].Name));
 			}
 		}
+
+        public static string GetFilePath(string filePath)
+        {
+            var path = Path.GetDirectoryName(filePath).Replace("\\", "/");
+            return path;
+        }
     }
 }

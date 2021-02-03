@@ -1,6 +1,8 @@
 {
     "name": "LFAsset.Runtime",
-    "references": [],
+    "references": [
+        "GUID:6676589d53b3860468605debb815c5f3"
+    ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": true,
