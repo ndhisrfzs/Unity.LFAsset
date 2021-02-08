@@ -185,6 +185,10 @@ namespace LFAsset.Editor
                     continue;
                 }
                 path = BundlePath(path);
+                if(string.IsNullOrEmpty(path))
+                {
+                    continue;
+                }
                 var dir = Path.GetDirectoryName(path).Replace("\\", "/");
                 var index = dirs.FindIndex(x => x.Equals(dir));
                 if(index == -1)

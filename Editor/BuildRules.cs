@@ -63,7 +63,7 @@ namespace LFAsset.Editor
                 {
                     if (Directory.Exists(file)) continue;   // 如果是文件夹，跳过
                     var ext = Path.GetExtension(file).ToLower();
-                    if ((ext == ".fbx" || ext == ".anim") && !item.Contains(ext)) continue;
+                    if ((ext == ".fbx" || ext == ".anim" || ext == ".ds_store") && !item.Contains(ext)) continue;
                     if (!BuildRules.ValidateAsset(file)) continue;
                     var asset = file.Replace("\\", "/");
                     getFiles.Add(asset);
@@ -142,10 +142,10 @@ namespace LFAsset.Editor
         #region Private
         internal static bool ValidateAsset(string asset)
         {
-            if (!asset.StartsWith("Assets/")) return false;
+            if (!asset.StartsWith("Assets/") || asset.Contains("Resources/")) return false;
 
             var ext = Path.GetExtension(asset).ToLower();
-            return ext != ".dll" && ext != ".cs" && ext != ".meta" && ext != ".js" && ext != ".boo";
+            return ext != ".dll" && ext != ".cs" && ext != ".meta" && ext != ".js" && ext != ".boo" && ext != ".ds_store";
         }
 
         private static bool IsScene(string asset)
