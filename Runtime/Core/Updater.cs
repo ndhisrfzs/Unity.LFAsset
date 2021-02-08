@@ -372,7 +372,7 @@ namespace LFAsset.Runtime
 #elif UNITY_WEBGL
             return "WebGL";
 #elif UNITY_STANDALONE_OSX
-            return "iOS";
+            return "MacOS";
 #else
             return "PC";
 #endif
