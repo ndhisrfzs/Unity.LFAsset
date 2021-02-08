@@ -142,7 +142,7 @@ namespace LFAsset.Editor
         #region Private
         internal static bool ValidateAsset(string asset)
         {
-            if (!asset.StartsWith("Assets/") || asset.Contains("Resources/")) return false;
+            if (!asset.StartsWith("Assets/")) return false;
 
             var ext = Path.GetExtension(asset).ToLower();
             return ext != ".dll" && ext != ".cs" && ext != ".meta" && ext != ".js" && ext != ".boo" && ext != ".ds_store";
