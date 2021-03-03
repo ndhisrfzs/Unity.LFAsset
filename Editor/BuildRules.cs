@@ -145,7 +145,7 @@ namespace LFAsset.Editor
             if (!asset.StartsWith("Assets/")) return false;
 
             var ext = Path.GetExtension(asset).ToLower();
-            return ext != ".dll" && ext != ".cs" && ext != ".meta" && ext != ".js" && ext != ".boo" && ext != ".ds_store";
+            return ext != ".dll" && ext != ".cs" && ext != ".meta" && ext != ".js" && ext != ".boo" && ext != ".ds_store" && ext != ".xml";
         }
 
         private static bool IsScene(string asset)

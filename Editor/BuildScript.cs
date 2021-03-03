@@ -27,7 +27,7 @@ namespace LFAsset.Editor
     {
         private const string Manifest = "Assets/Manifest.asset";
         private const string Version = "var";
-        private const string BundlesPath = "/bundles/";
+        private const string BundlesPath = "/Bundles/";
         internal const string RelativeDirPrefix = "./Release";
         internal const string BuildFolder = RelativeDirPrefix + "/{0}/StreamingAssets/";
 
@@ -178,7 +178,7 @@ namespace LFAsset.Editor
             for(var i = 0; i < ruleAssets.Length; i++)
             {
                 var asset = ruleAssets[i];
-                var path = asset.path.ToLower();
+                var path = asset.path;
                 if(!path.Contains(BundlesPath))
                 {
                     // 只记录Bundles目录下的资源文件
@@ -408,7 +408,7 @@ namespace LFAsset.Editor
                     Size = size
                 });
 
-                version.TotalSize += size;
+                version.TotalSize += size; 
             }
 
             version.Version = ver;

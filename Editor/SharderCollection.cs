@@ -1,6 +1,4 @@
-﻿using LFAsset.Runtime;
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -52,10 +50,11 @@ namespace LFAsset.Editor
             //// 生成临时文件
             //AssetDatabase.CreateAsset(toolSVC, toolsSVCPath);
 
-            string path = ApplicationHelper.BundleResourcePath;
+            BuildRules rule = BuildScript.GetBuildRules();
+            string[] paths = rule.rules.Select(x => x.searchPath).ToArray();
             List<string> assets = new List<string>();
-            assets.AddRange(AssetDatabase.FindAssets("t:Prefab", new string[] { path }).ToList());
-            assets.AddRange(AssetDatabase.FindAssets("t:Material", new string[] { path }).ToList());
+            assets.AddRange(AssetDatabase.FindAssets("t:Prefab", paths).ToList());
+            assets.AddRange(AssetDatabase.FindAssets("t:Material", paths).ToList());
 
             List<string> allMats = new List<string>();
             for(int i = 0; i < assets.Count; i++)
@@ -93,7 +92,7 @@ namespace LFAsset.Editor
                 }
             }
 
-            string shadervariantsPath = Path.Combine(path, "Shader/TheShaderVariantForAll.shadervariants");
+            string shadervariantsPath = Path.Combine("Assets/Bundles/Shader/TheShaderVariantForAll.shadervariants");
             FileHelper.WriteAllText(shadervariantsPath, "");
             File.Delete(shadervariantsPath);
 

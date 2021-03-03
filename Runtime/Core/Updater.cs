@@ -174,7 +174,15 @@ namespace LFAsset.Runtime
             }
 
             // 资源下载完成，加载Manifest文件
-            AssetBundleManager.Ins.LoadManifest();
+            AssetSetting assetSetting = Resources.Load<AssetSetting>("AssetSetting");
+            if (assetSetting == null)
+            {
+                Assets.Initialize(false, null);
+            }
+            else
+            {
+                Assets.Initialize(assetSetting.IsEncrypt, assetSetting.Secret);
+            }
         }
 
         private IEnumerator _checking;
