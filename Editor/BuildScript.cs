@@ -25,7 +25,6 @@ namespace LFAsset.Editor
 
     public static class BuildScript 
     {
-        private const string Manifest = "Assets/Manifest.asset";
         private const string Version = "var";
         private const string BundlesPath = "/Bundles/";
         internal const string RelativeDirPrefix = "./Release";
@@ -91,7 +90,8 @@ namespace LFAsset.Editor
 
             // 生成Manifest
             var manifest = CreateManifest(outputPath, rules.ruleAssets, assetBundleManifest);
-            var manifestBundleName = "manifest.unity3d";
+            var manifestBundleName = Path.GetFileName(Assets.ManifestAsset);
+            manifestBundleName = manifestBundleName.Replace(".asset", ".unity3d");
             builds = new[]
             {
                 new AssetBundleBuild
@@ -272,7 +272,7 @@ namespace LFAsset.Editor
         /// <returns></returns>
         public static Manifest GetManifest()
         {
-            return GetAsset<Manifest>(Manifest);
+            return GetAsset<Manifest>(Assets.ManifestAsset);
         }
 
         /// <summary>

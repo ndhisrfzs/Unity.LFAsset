@@ -11,7 +11,7 @@ namespace LFAsset.Runtime
 {
     public sealed class Assets : MonoBehaviour
     {
-        public const string ManifestAsset = "Assets/Manifest.asset";
+        public const string ManifestAsset = "Assets/manifest.asset";
         public const string Extension = ".unity3d";
 
         public static bool runtimeMode = true;
